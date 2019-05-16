@@ -3,6 +3,7 @@ var lnf = new nodemine.ExecWidget("say hixd");
 var pack = {
 	pack_format: 1,
 	target: "./pack",
+	name: "nntest",
 	desc: "moin",
 	namespaces: [
 		{

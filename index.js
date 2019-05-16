@@ -1,10 +1,12 @@
 var fs = require("fs");
 var path = require("path");
 var Widget = class {
-	generate(prefix){}
+	generate(context){}
 };
 module.exports={
-	compile(pack){
+	compile(pack,prodBuild){
+		if (pack===undefined) throw new Error("You must give a pack to compile.");
+		if (prodBuild===undefined) prodBuild = false;
 		if (!(pack.pack_format===1)) throw new Error("Invalid pack_format. 1 is the only valid value.");
 		var addToMcLoad=[];
 		var addToMcTick=[];
@@ -27,7 +29,7 @@ module.exports={
 					addToMcLoad.push(namespace.name+":load");
 				}
 				for (let [key, value] of Object.entries(namespace.functions)) {
-					fs.writeFileSync(path.join(pack.target,"data",namespace.name,"functions",key+".mcfunction"),value.generate(""));
+					fs.writeFileSync(path.join(pack.target,"data",namespace.name,"functions",key+".mcfunction"),value.generate({prefix:"",pack:pack.name,namespace:namespace.name,prod:prodBuild,file:key+".mcfunction",function_name:key}));
 				}
 			}
 		});
@@ -40,8 +42,11 @@ module.exports={
 			super();
 			this.cmd=cmd;
 		}
-		generate(prefix){
-			return prefix+this.cmd;
+		generate(context){
+			console.log(context);
+			return context.prefix+this.cmd;
 		}
+	},
+	MultiRunWidget: class extends Widget {
 	}
 };
