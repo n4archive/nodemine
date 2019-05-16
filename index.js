@@ -43,10 +43,22 @@ module.exports={
 			this.cmd=cmd;
 		}
 		generate(context){
-			console.log(context);
 			return context.prefix+this.cmd;
 		}
 	},
 	MultiRunWidget: class extends Widget {
+		constructor(widgets,delimiter){
+			super();
+			this.widgets = widgets;
+			this.delimiter = delimiter || "\n";
+		}
+		generate(context){
+			var out = "";
+			var delimiter = this.delimiter;
+			this.widgets.forEach((widget)=>{
+				out += widget.generate(context) + delimiter;
+			});
+			return out;
+		}
 	}
 };
